@@ -1,0 +1,27 @@
+nav .navbar-brand
+{
+    /* size for brand */
+    font-size: xx-large;
+}
+
+
+.red
+{
+    color: #ea433b;
+}
+
+
+main
+{
+    /* Scroll horizontally as needed */
+    overflow-x: auto;
+
+}
+
+main img
+{
+    /* Constrain images on small screens */
+    max-width: 100%;
+}
+
+.data{}

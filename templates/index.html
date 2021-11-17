@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block main %}
+
+    <div class="modal" id="insertModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">Insert rows/columns</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <form action="/add" method="post">
+                        <div class="form-group">
+                            <div>
+                                <input name="rows" class="form-control" placeholder="Rows" type="number" min="0" max="1000">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <input name="cols" class="form-control" placeholder="Columns" type="number" min="0" max="1000">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <input type="submit" class="btn btn-primary" value="Insert">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="xModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">Export as CSV</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <a class="btn btn-primary" href="{{ '/static/' + user + '.csv' }}" download>Export</a>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="iModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">Import CSV file</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <form action="/import" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="i_file">Choose CSV file</label>
+                            <input type="file" id="i_file" class="form-control-file" name="import_file" accept=".csv" value="Choose File" required>
+                        </div>
+                        <input class="btn btn-primary" type="submit" value="Import">
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <table class="table table-bordered" id="table">
+        <tr class="font-weight-bold">
+            <td></td>
+            {% for col in cols %}
+                <th>{{ col }}</th>
+            {% endfor %}
+        {% for row in rows %}
+            {% set outer_loop = loop %}
+            </tr>
+            <tr>
+                <th class="font-weight-bold">{{ row }}</th>
+            {% for col in cols %}
+                {% if  col + '_' + row|string  in things %}
+                    <td contenteditable data-x="{{ loop.index0 }}" data-y="{{ outer_loop.index0 }}" data-text="{{  things[col + '_' + row|string]  }}" class="data" id="{{ col + '_' + row|string }}" title="{{ col + '_' + row|string }}">{{  things[ col + '_' + row|string ]  }}</td>
+                {% else %}
+                    <td contenteditable data-text="" data-x="{{ loop.index0 }}" data-y="{{ outer_loop.index0 }}" class="data" id="{{ col + '_' + row|string }}" title="{{ col + '_' + row|string }}"></td>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+        </tr>
+    </table>
+
+{% endblock %}

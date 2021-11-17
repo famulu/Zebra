@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, width=device-width">
+
+        <link href="/static/styles.css" rel="stylesheet">
+        <script src="/static/arrowKeys.js"></script>
+
+        <link rel="icon" href="https://img.icons8.com/fluent/48/000000/funny-zebra.png">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+        <title>Zebra: {% block title %}{% endblock %}</title>
+
+    </head>
+
+    <body>
+
+        <nav class="navbar navbar-expand-md navbar-light bg-light border sticky-top">
+
+            <a class="navbar-brand" href="/"><img class="pr-2" src="https://img.icons8.com/fluent/48/000000/funny-zebra.png"/><span class="red">Zebra</span></a>
+
+            <button class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbar">
+                {% if session.user_id %}
+                    <ul class="navbar-nav mr-auto mt-2">
+                        {% if page %}
+                        <li class="nav-item"><a class="nav-link" href="#" onclick="save()">Save</a></li>
+                        <form action="/save" id="myForm" method="post">
+                            <input type="hidden" id="roar" name="output">
+                        </form>
+                        <li class="nav-item"><a class="nav-link" href="#iModal" data-toggle="modal">Import</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#xModal" data-toggle="modal" onclick="x_port()">Export</a></li>
+                        <form action="/export" id="x_form" target="frame" onsubmit="$('#myModal').modal();">
+                        </form>
+                        <iframe name="frame" style="display:none;"></iframe>
+                        <li class="nav-item"><a class="nav-link" href="#insertModal" data-toggle="modal">Insert</a></li>
+                        {% endif %}
+                        <li class="nav-item"><a class="nav-link" href="/password">Change Password</a></li>
+                        <script>
+                            function save() {
+                                let data = document.querySelectorAll(".data");
+                                let output = [];
+                                for (let i = 0; i < data.length; i++) {
+                                    if (data[i].innerHTML != data[i].getAttribute("data-text")) {
+                                        console.log(data[i].innerHTML, data[i].getAttribute("data-text"))
+                                        output.push([data[i].id, data[i].innerHTML]);
+                                    }
+                                }
+                                document.getElementById("roar").value = output;
+                                document.getElementById("myForm").submit();
+                            }
+
+                            function x_port() {
+                                document.getElementById("x_form").submit();
+                            }
+                        </script>
+                    </ul>
+                    <ul class="navbar-nav ml-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                    </ul>
+                {% else %}
+                    <ul class="navbar-nav ml-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
+                    </ul>
+                {% endif %}
+            </div>
+        </nav>
+
+        {% if get_flashed_messages() %}
+            <header>
+                <div class="alert alert-primary alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ get_flashed_messages() | join(" ") }}
+                </div>
+            </header>
+        {% endif %}
+
+        <main class="container-fluid p-1">
+            {% block main %}{% endblock %}
+        </main>
+
+        <footer class="small text-center">
+            <a class="text-muted" href="https://icons8.com/icon/8864fJDRaHhN/zebra">Zebra icon by Icons8</a>
+            <div id="demon" style="display:none;">{{ cols }}</div>
+        </footer>
+
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script>
+            $(function () {
+                $('.data').tooltip()
+            })
+        </script>
+    </body>
+</html>
